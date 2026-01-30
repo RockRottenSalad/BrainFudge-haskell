@@ -1,10 +1,7 @@
 module BrainFudge (parseProgram, runProgram) where 
 
-import Data.List (elem)
-import Data.List.Split (splitOn)
 import Data.Maybe
 import Text.Printf (printf)
-import Control.Monad.State
 import qualified Zipper as Z
 import Data.Char (ord)
 
@@ -28,12 +25,6 @@ toToken '>' = Just Greater
 toToken '.' = Just Period
 toToken ',' = Just Comma
 toToken _   = Nothing
-
-isRepeatable :: Token -> Bool
-isRepeatable x = x `elem` [Plus, Minus, Less, Greater]
-
-isLoopToken :: Token -> Bool
-isLoopToken x = x `elem` [BracketL, BracketR]
 
 parseInstructions :: [Token] -> ([Token], [Instruction])
 parseInstructions [] = ([], [])
