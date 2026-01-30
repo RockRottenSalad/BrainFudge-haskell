@@ -6,13 +6,13 @@ import Data.Maybe
 import Text.Printf (printf)
 import Control.Monad.State
 import qualified Zipper as Z
-import Data.Ord (clamp)
+import Data.Char (ord)
 
 -- BEGIN: TOKENIZER/PARSER
-data Instruction = Add | Sub | ShiftLeft | ShiftRight | While [Instruction] | Print
+data Instruction = Add | Sub | ShiftLeft | ShiftRight | While [Instruction] | Print | Read
                    deriving Show
 
-data Token = Plus | Minus | Less | Greater | BracketL | BracketR | Period
+data Token = Plus | Minus | Less | Greater | BracketL | BracketR | Period | Comma
                 deriving (Show, Eq)
 
 isToken :: Char -> Bool
@@ -26,6 +26,7 @@ toToken ']' = Just BracketR
 toToken '<' = Just Less
 toToken '>' = Just Greater
 toToken '.' = Just Period
+toToken ',' = Just Comma
 toToken _   = Nothing
 
 isRepeatable :: Token -> Bool
@@ -57,6 +58,7 @@ parseInstruction (x:xs) = case x of
                             Less -> (xs, ShiftLeft)
                             Greater -> (xs, ShiftRight)
                             Period -> (xs, Print)
+                            Comma -> (xs, Read)
                             BracketL -> let
                                         (tokens, ins) = parseInstructions xs 
                                         in (tokens, While ins)
@@ -79,6 +81,7 @@ runProgram' (x:xs) state = state >>= \state ->
                 ShiftLeft  -> return $ Z.left  state
                 ShiftRight -> return $ Z.right state
                 Print      -> printf "%c" (Z.head state) >> return state
+                Read       -> getChar >>= \ch -> return $ Z.modifyHead state (\_ -> ord ch)
                 While ins  -> whileLoop state
                               where
                               whileLoop state
@@ -88,7 +91,7 @@ runProgram' (x:xs) state = state >>= \state ->
 
 runProgram :: [Instruction] -> IO()
 runProgram ins = do
-    runProgram' ins $ return (Z.fromList $ replicate 64 0) 
+    runProgram' ins $ return (Z.fromList $ replicate 30000 0) 
     return ()
 
 -- END: INTERPRETER
