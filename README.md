@@ -37,5 +37,6 @@ echo "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<
 
 ## Caveats/Unfinished features
 
-The `,` operator which reads standard input
+The `,` operator which reads standard input is buffered and expects a return key.
+This will be fixed if I bother figuring out how to get raw mode working in Haskell.
 
