@@ -23,7 +23,7 @@ You can either give a filepath as an argument
 ./BrainFudge file.b
 ```
 
-Or simple feed the file contents directly into standard input.
+Or simply feed the file contents directly into standard input.
 
 ```
 ./BrainFudge < file.b
